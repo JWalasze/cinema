@@ -5,7 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "reserved_seat")
+@Table(
+        name = "reserved_seat",
+        uniqueConstraints = {@UniqueConstraint(
+                name = "unique_programme_seat",
+                columnNames = {"reserved_seat_id", "programme_id"}
+        )}
+)
 @Getter
 @Setter
 public class ReservedSeat {
@@ -25,18 +31,28 @@ public class ReservedSeat {
     @JoinColumn(
             name = "reserved_seat_id",
             nullable = false,
-            foreignKey = @ForeignKey(name = "reserved_seat_id")
+            foreignKey = @ForeignKey(name = "reserved_seat_fkey")
     )
     private Seat reservedSeat;
+
+    @ManyToOne
+    @JoinColumn(
+            name = "programme_id",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "programme_fkey")
+    )
+    private Programme programme;
 
     public ReservedSeat() {
     }
 
     public ReservedSeat(
             Reservation reservation,
-            Seat reservedSeat
+            Seat reservedSeat,
+            Programme programme
     ) {
         this.reservation = reservation;
         this.reservedSeat = reservedSeat;
+        this.programme = programme;
     }
 }

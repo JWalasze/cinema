@@ -2,12 +2,16 @@ package com.rest.cinemaapi.models;
 
 import com.rest.cinemaapi.enumerators.ReservationStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "reservation")
+@Getter
+@Setter
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -71,11 +75,10 @@ public class Reservation {
 
     public Reservation(
             ContactData contactData,
-            ReservationStatus reservationStatus,
             Programme programmeFilm
     ) {
         this.contactData = contactData;
-        this.reservationStatus = reservationStatus;
+        this.reservationStatus = ReservationStatus.VALID;
         this.programmeFilm = programmeFilm;
         this.reservedSeats = new ArrayList<>();
     }

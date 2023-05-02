@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -26,7 +27,9 @@ public class CinemaConfig {
             CinemaHallRepository cinemaHallRepository,
             CinemaRepository cinemaRepository,
             ProgrammeRepository programmeRepository,
-            FilmRepository filmRepository
+            FilmRepository filmRepository,
+            ReservationRepository reservationRepository,
+            ReservedSeatRepository reservedSeatRepository
     ) {
         return args -> {
             var address = new Address("Wrocław", "58-303", "Robotnicza", "96");
@@ -34,8 +37,8 @@ public class CinemaConfig {
             var cinema1 = new Cinema("Wrocław Magnolia Park", address);
             var cinema2 = new Cinema("Warszawa Złote Tarasy", address);
 
-            var cinemaHall1 = new CinemaHall("3B", HallType.screen2D, cinema2);
-            var cinemaHall2 = new CinemaHall("4A", HallType.screen3D, cinema1);
+            var cinemaHall1 = new CinemaHall("3B", HallType.STANDARD, cinema2);
+            var cinemaHall2 = new CinemaHall("4A", HallType.SCREEN_4DX, cinema1);
 
             var seat1 = new Seat(2, 3, 4, 5, cinemaHall1, SeatSection.A);
             var seat2 = new ForDisabledSeat(1, 3, 2, 3, cinemaHall1, SeatSection.B);
@@ -52,6 +55,7 @@ public class CinemaConfig {
             cinemaRepository.save(cinema1);
             cinemaRepository.save(cinema2);
 
+
 //            cinemaHallRepository.save(cinemaHall1);
 //            cinemaHallRepository.save(cinemaHall2);
 
@@ -66,8 +70,8 @@ public class CinemaConfig {
             var x = cinemaRepository.findAllByAddress_CityIs("Wrocław");
             x.forEach(System.out::println);
 
-            var film1 = new Film("x", "x", "x", "x", LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url");
-            var film2 = new Film("y", "y", "y", "y", LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url");
+            var film1 = new Film("x", "x", "x", "x", BigDecimal.valueOf(43.682), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_2D, FilmType.SCREEN_X);
+            var film2 = new Film("y", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_3D, FilmType.HALL_4DX);
 
             filmRepository.saveAll(List.of(film1, film2));
 
@@ -80,10 +84,24 @@ public class CinemaConfig {
 
             var contact = new ContactData("Kuba", "W", "500", "500@");
 
-            var reservation1 = new Reservation(contact, ReservationStatus.VALID, programme1);
+            var reservation1 = new Reservation(contact, programme1);
+            var reservation2 = new Reservation(contact, programme1);
 
-            var seatRes1 = new ReservedSeat(reservation1, seat1);
-            var seatRes2 = new ReservedSeat(reservation1, seat2);
+            var seatRes1 = new ReservedSeat(reservation1, seat1, programme1);
+            var seatRes2 = new ReservedSeat(reservation1, seat2, programme1);
+
+            var seatRes3 = new ReservedSeat(reservation2, seat3, programme1);
+            var seatRes4 = new ReservedSeat(reservation2, seat1, programme2);
+
+            reservation1.getReservedSeats().addAll(List.of(seatRes1, seatRes2));
+            reservation2.getReservedSeats().addAll(List.of(seatRes3, seatRes4));
+
+            reservationRepository.save(reservation1);
+            reservationRepository.save(reservation2);
+
+            var res = reservationRepository.findById(1L);
+            //res.get().getReservedSeats().forEach(System.out::println);
+//            reservationRepository.delete(reservation1);
 
 
 //            entityManager.merge(cinema.get());
