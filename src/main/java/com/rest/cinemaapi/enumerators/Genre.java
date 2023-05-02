@@ -1,5 +1,5 @@
 package com.rest.cinemaapi.enumerators;
 
 public enum Genre {
-    ACTION
+    ACTION, FANTASY, ROMANCE, COMEDY, DRAMA, HORROR, THRILLER, MYSTERY
 }
