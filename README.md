@@ -1,2 +1,2 @@
 # CinemaAppBackend
-Nasze super projekt, będzie fajnie, życie jest piekne :)
+Nasz super projekt, będzie fajnie, życie jest piekne :)
