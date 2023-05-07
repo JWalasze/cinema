@@ -65,22 +65,33 @@ public class CinemaConfig {
 //
 //            var seat = seatRepository.findById(2L);
 //            System.out.println(seat.get().getCinemaHall().getHallName());
+            System.out.println("....//.....");
+            var cinemas = cinemaRepository.findAll();
+            cinemas.forEach(System.out::println);
+            System.out.println("...././.....");
 
             var cinema = cinemaRepository.findById(1L);
             var x = cinemaRepository.findAllByAddress_CityIs("Wrocław");
             x.forEach(System.out::println);
 
-            var film1 = new Film("x", "x", "x", "x", BigDecimal.valueOf(43.682), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_2D, FilmType.SCREEN_X);
-            var film2 = new Film("y", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_3D, FilmType.HALL_4DX);
+            var film1 = new Film("Szybcy i Wściekli", "x", "x", "x", BigDecimal.valueOf(43.682), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_2D, FilmType.SCREEN_X);
+            var film2 = new Film("Jagodno", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.DRAMA, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_2D, FilmType.SCREEN_X);
+            var film3 = new Film("Harry Potter", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.COMEDY, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_3D, FilmType.DOLBY_ATMOS);
+            var film4 = new Film("Indiana Jones", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ACTION, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_3D, FilmType.HALL_4DX);
+            var film5 = new Film("Top", "y", "y", "y", BigDecimal.valueOf(23.45), LocalDate.now(), LocalTime.now(), AgeLimit.PG18, Genre.ANIMATED, "url", FilmLanguageType.DUBBING, FilmScreenType.SCREEN_2D, FilmType.STANDARD);
 
-            filmRepository.saveAll(List.of(film1, film2));
+            filmRepository.saveAll(List.of(film1, film2, film3, film4, film5)); //DAC TEST ŻE DZIAla SORTING
 
             var programme1 = new Programme(LocalDateTime.now(), film1, cinemaHall1);
-            var programme2 = new Programme(LocalDateTime.of(2020, 12, 23, 9, 15), film2, cinemaHall2);
-            var programme4 = new Programme(LocalDateTime.of(2020, 12, 23, 9, 15), film1, cinemaHall2);
-            var programme3 = new Programme(LocalDateTime.of(2020, 12, 23, 10, 15), film1, cinemaHall2);
+            var programme2 = new Programme(LocalDateTime.now(), film2, cinemaHall2);
+            var programme4 = new Programme(LocalDateTime.now(), film1, cinemaHall2);
+            var programme3 = new Programme(LocalDateTime.now(), film1, cinemaHall2);
 
-            programmeRepository.saveAll(List.of(programme1, programme2, programme3, programme4));
+            var prog5 = new Programme(LocalDateTime.now(), film3, cinemaHall2);
+            var prog6 = new Programme(LocalDateTime.now(), film4, cinemaHall2);
+            var prog7 = new Programme(LocalDateTime.now(), film5, cinemaHall2);
+
+            programmeRepository.saveAll(List.of(programme1, programme2, programme3, programme4, prog5, prog6, prog7));
 
             var contact = new ContactData("Kuba", "W", "500", "500@");
 
@@ -100,8 +111,21 @@ public class CinemaConfig {
             reservationRepository.save(reservation2);
 
             var res = reservationRepository.findById(1L);
-            //res.get().getReservedSeats().forEach(System.out::println);
+            res.get().getReservedSeats().forEach(System.out::println);
 //            reservationRepository.delete(reservation1);
+
+            System.out.println("...");
+            var d = cinemaRepository.findAll();
+            d.forEach(System.out::println);
+
+            var e = new FilmCharacteristics();
+            e.getFilters().forEach(System.out::println);
+            e.getFilmScreenTypes().forEach(System.out::println);
+            e.getFilmTypes().forEach(System.out::println);
+            e.getSeatSections().forEach(System.out::println);
+            e.getGenres().forEach(System.out::println);
+            e.getHallTypes().forEach(System.out::println);
+            e.getFilmLanguageTypes().forEach(System.out::println);
 
 
 //            entityManager.merge(cinema.get());

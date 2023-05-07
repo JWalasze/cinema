@@ -14,7 +14,7 @@ import java.time.LocalTime;
         name = "film_catalog",
         uniqueConstraints = {@UniqueConstraint(
                 name = "unique_film_types",
-                columnNames = {"film_language_type", "film_screen_type", "film_type"}
+                columnNames = {"film_language_type", "film_screen_type", "film_type", "name"}
         )}
 )
 @Getter
@@ -87,21 +87,21 @@ public class Film {
             name = "film_language_type",
             nullable = false
     )
-    private FilmLanguageType filmLanguageType;
+    private FilmLanguageType languageType;
 
     @Enumerated(EnumType.STRING)
     @Column(
             name = "film_screen_type",
             nullable = false
     )
-    private FilmScreenType filmScreenType;
+    private FilmScreenType screenType;
 
     @Enumerated(EnumType.STRING)
     @Column(
             name = "film_type",
             nullable = false
     )
-    private FilmType filmType;
+    private FilmType type;
 
     @Column(
             name = "price",
@@ -138,8 +138,8 @@ public class Film {
         this.ageLimit = ageLimit;
         this.genre = genre;
         this.poster = poster;
-        this.filmLanguageType = filmLanguageType;
-        this.filmScreenType = filmScreenType;
-        this.filmType = filmType;
+        this.languageType = filmLanguageType;
+        this.screenType = filmScreenType;
+        this.type = filmType;
     }
 }

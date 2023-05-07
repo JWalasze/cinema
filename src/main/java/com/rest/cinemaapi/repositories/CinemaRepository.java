@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
-    @EntityGraph(value = "cinema-with-all-halls", type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(
+            value = "cinema-with-all-halls",
+            type = EntityGraph.EntityGraphType.LOAD
+    )
     List<Cinema> findAllByAddress_CityIs(String id);
 
 }

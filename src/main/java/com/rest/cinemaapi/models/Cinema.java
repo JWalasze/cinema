@@ -1,5 +1,6 @@
 package com.rest.cinemaapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -56,6 +57,7 @@ public class Cinema {
     )
     private Address address;
 
+    @JsonIgnore
     @OneToMany(
             mappedBy = "cinema",
             cascade = CascadeType.PERSIST,
