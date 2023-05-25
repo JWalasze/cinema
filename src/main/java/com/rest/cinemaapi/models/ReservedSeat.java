@@ -15,6 +15,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReservedSeat {
+    @Transient
+    private final Object lock = new Object();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +36,7 @@ public class ReservedSeat {
             nullable = false,
             foreignKey = @ForeignKey(name = "reserved_seat_fkey")
     )
-    private Seat reservedSeat;
+    private Seat seat;
 
     @ManyToOne
     @JoinColumn(
@@ -48,11 +51,19 @@ public class ReservedSeat {
 
     public ReservedSeat(
             Reservation reservation,
-            Seat reservedSeat,
+            Seat seat,
             Programme programme
     ) {
         this.reservation = reservation;
-        this.reservedSeat = reservedSeat;
+        this.seat = seat;
         this.programme = programme;
+    }
+
+    @PostPersist
+    private void updateFreeSeatsForProgramme() {
+        synchronized (lock) {
+            this.programme.setNumberOfFreeSeats(this.programme.getNumberOfFreeSeats() + 1);
+        }
+
     }
 }

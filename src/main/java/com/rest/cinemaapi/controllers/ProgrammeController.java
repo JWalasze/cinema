@@ -25,9 +25,9 @@ public class ProgrammeController {
     @GetMapping("/programme")
     public Page<Programme> getProgramme(
             @RequestParam Integer cinemaId,
+            @RequestParam LocalDate date,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "3") Integer size,
-            @RequestParam LocalDate date,
             @RequestParam(defaultValue = "") Filter filterBy,
             @RequestParam(defaultValue = "") String value
     ) {

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class ProgrammeService {
@@ -22,6 +23,11 @@ public class ProgrammeService {
     @Autowired
     public ProgrammeService(ProgrammeRepository programmeRepository) {
         this.programmeRepository = programmeRepository;
+    }
+
+
+    public Optional<Programme> getProgrammeById(Long programmeId) {
+        return this.programmeRepository.findById(programmeId);
     }
 
     public Page<Programme> getProgramme(

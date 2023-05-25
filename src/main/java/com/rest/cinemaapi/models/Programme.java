@@ -39,6 +39,9 @@ public class Programme {
     )
     private LocalDateTime date;
 
+    @Transient
+    private Integer numberOfFreeSeats;
+
     @ManyToOne
     @JoinColumn(
             name = "film_id",
@@ -57,6 +60,7 @@ public class Programme {
     private CinemaHall hall;
 
     public Programme() {
+        this.numberOfFreeSeats = 0;
     }
 
     public Programme(
@@ -67,5 +71,10 @@ public class Programme {
         this.date = date;
         this.film = film;
         this.hall = hall;
+        this.numberOfFreeSeats = 0;
+    }
+
+    private void InitializeNumberOfFreeSeats() {
+
     }
 }

@@ -9,6 +9,10 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+@NamedEntityGraph(
+        name = "cinema-halls-with-all-seats",
+        attributeNodes = {@NamedAttributeNode("seats")}
+)
 @Entity
 @Table(name = "cinema_hall")
 @Getter
@@ -31,14 +35,17 @@ public class CinemaHall {
     )
     private HallType hallType;
 
-    @JsonIgnore
     @OneToMany(
             mappedBy = "cinemaHall",
-            cascade = CascadeType.PERSIST,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     private List<Seat> seats;
 
+    @Transient
+    private Integer numberOfSeats;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(
             name = "cinema_id",
@@ -49,16 +56,32 @@ public class CinemaHall {
 
     public CinemaHall() {
         this.seats = new ArrayList<>();
+        this.numberOfSeats = 0;
     }
 
     public CinemaHall(
-            String hallId,
+            String hallName,
             HallType hallType,
             Cinema cinema
     ) {
-        this.hallName = hallId;
+        this.hallName = hallName;
         this.hallType = hallType;
         this.cinema = cinema;
         this.seats = new ArrayList<>();
+        this.numberOfSeats = 0;
+    }
+
+    public CinemaHall(CinemaHall cinemaHall) {
+        this.id = cinemaHall.getId();
+        this.hallName = cinemaHall.getHallName();
+        this.hallType = cinemaHall.getHallType();
+        this.cinema = cinemaHall.getCinema();
+        this.seats = new ArrayList<>();
+        this.numberOfSeats = cinemaHall.getNumberOfSeats();
+    }
+
+    @PostLoad
+    private void postLoadMethod() {
+        this.numberOfSeats = this.seats.size();
     }
 }

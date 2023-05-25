@@ -1,5 +1,6 @@
 package com.rest.cinemaapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rest.cinemaapi.enumerators.SeatSection;
 import com.rest.cinemaapi.enumerators.SeatType;
 import jakarta.persistence.*;
@@ -11,6 +12,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Seat {
+    @JsonIgnore
+    @Transient
+    private final Object lockSeat = new Object();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +40,13 @@ public class Seat {
     @Column(name = "type", nullable = false)
     private SeatType seatType;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cinema_hall_id", nullable = false, foreignKey = @ForeignKey(name = "hall_fkey"))
     private CinemaHall cinemaHall;
 
-    public Seat() {}
+    public Seat() {
+    }
 
     public Seat(
             Integer layoutColumn,
@@ -57,5 +63,16 @@ public class Seat {
         this.seatType = SeatType.REGULAR;
         this.cinemaHall = cinemaHall;
         this.seatSection = seatSection;
+    }
+
+    @PostPersist
+    private void updateCinemaHall() {
+        synchronized (lockSeat) {
+            System.out.println("Proszeeeee");
+            //System.out.println(this.cinemaHall.getNumberOfSeats());
+            System.out.println(this.getCinemaHall().getNumberOfSeats() + 1);
+            this.cinemaHall.setNumberOfSeats(this.getCinemaHall().getNumberOfSeats() + 1);
+            System.out.println(this.getCinemaHall().getNumberOfSeats());
+        }
     }
 }

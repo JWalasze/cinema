@@ -41,13 +41,13 @@ public class CinemaConfig {
             var cinemaHall2 = new CinemaHall("4A", HallType.SCREEN_4DX, cinema1);
 
             var seat1 = new Seat(2, 3, 4, 5, cinemaHall1, SeatSection.A);
-            var seat2 = new ForDisabledSeat(1, 3, 2, 3, cinemaHall1, SeatSection.B);
+            var seat2 = new ForDisabledSeat(1, 3, 2, 3, cinemaHall2, SeatSection.B);
             var seat3 = new Seat(2, 5, 2, 6, cinemaHall1, SeatSection.A);
             var seat4 = new DoubleSeat(7, 7, 7, 8, cinemaHall1, 7, 8, 7, 9, SeatSection.C);
-            var doubleSeat5 = new DoubleSeat(4, 5, 4, 5, cinemaHall2, 5, 6, 5, 6, SeatSection.C);
+            var doubleSeat5 = new DoubleSeat(4, 5, 4, 5, cinemaHall1, 5, 6, 5, 6, SeatSection.C);
 
-            cinemaHall1.getSeats().addAll(Arrays.asList(seat1, seat2, seat3, seat4, seat1));
-            cinemaHall2.getSeats().add(doubleSeat5);
+            cinemaHall1.getSeats().addAll(Arrays.asList(seat1, doubleSeat5, seat3, seat4, seat1));
+            cinemaHall2.getSeats().add(seat2);
 
             cinema1.getHalls().add(cinemaHall2);
             cinema2.getHalls().add(cinemaHall1);
@@ -95,23 +95,23 @@ public class CinemaConfig {
 
             var contact = new ContactData("Kuba", "W", "500", "500@");
 
-            var reservation1 = new Reservation(contact, programme1);
-            var reservation2 = new Reservation(contact, programme1);
-
-            var seatRes1 = new ReservedSeat(reservation1, seat1, programme1);
-            var seatRes2 = new ReservedSeat(reservation1, seat2, programme1);
-
-            var seatRes3 = new ReservedSeat(reservation2, seat3, programme1);
-            var seatRes4 = new ReservedSeat(reservation2, seat1, programme2);
-
-            reservation1.getReservedSeats().addAll(List.of(seatRes1, seatRes2));
-            reservation2.getReservedSeats().addAll(List.of(seatRes3, seatRes4));
-
-            reservationRepository.save(reservation1);
-            reservationRepository.save(reservation2);
-
-            var res = reservationRepository.findById(1L);
-            res.get().getReservedSeats().forEach(System.out::println);
+//            var reservation1 = new Reservation(contact, programme1);
+//            var reservation2 = new Reservation(contact, programme1);
+//
+//            var seatRes1 = new ReservedSeat(reservation1, seat1, programme1);
+//            var seatRes2 = new ReservedSeat(reservation1, seat4, programme1);
+//
+//            var seatRes3 = new ReservedSeat(reservation2, seat3, programme1);
+//            var seatRes4 = new ReservedSeat(reservation2, seat1, programme2);
+//
+//            reservation1.getReservedSeats().addAll(List.of(seatRes1, seatRes2));
+//            reservation2.getReservedSeats().addAll(List.of(seatRes3, seatRes4));
+//
+//            reservationRepository.save(reservation1);
+//            reservationRepository.save(reservation2);
+//
+//            var res = reservationRepository.findById(1L);
+//            res.get().getReservedSeats().forEach(System.out::println);
 //            reservationRepository.delete(reservation1);
 
             System.out.println("...");
@@ -126,6 +126,30 @@ public class CinemaConfig {
             e.getGenres().forEach(System.out::println);
             e.getHallTypes().forEach(System.out::println);
             e.getFilmLanguageTypes().forEach(System.out::println);
+
+            var hall = cinemaHallRepository.findById(2L);
+            var t = hall.get().getSeats();
+            t.forEach(xx -> System.out.println(xx.getId()));
+            System.out.println(hall.get().getNumberOfSeats());
+
+            var newSeat = new Seat(1, 1, 1, 1, hall.get(), SeatSection.C);
+            var newSeat1 = new Seat(1, 1, 1, 1, hall.get(), SeatSection.C);
+            var newSeat2 = new Seat(1, 1, 1, 1, hall.get(), SeatSection.C);
+            hall.get().getSeats().add(newSeat);
+            hall.get().getSeats().add(newSeat1);
+            hall.get().getSeats().add(newSeat2);
+
+            //hall.get().setHallName("TURBAN");
+//            seatRepository.saveAndFlush(newSeat);
+//            seatRepository.saveAndFlush(newSeat1);
+//            seatRepository.saveAndFlush(newSeat2);
+//            Thread.sleep(10 * 1000);
+            var flushed = cinemaHallRepository.saveAndFlush(hall.get());
+
+            System.out.println(flushed.getNumberOfSeats());
+
+//            var halls = cinemaHallRepository.findAll();
+//            halls.forEach(c -> System.out.println(c.seats())); //Ma rzucac nullem i rzuca więc git
 
 
 //            entityManager.merge(cinema.get());
